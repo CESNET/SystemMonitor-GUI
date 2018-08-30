@@ -23,7 +23,7 @@ export class MonitorComponent implements OnInit {
   }
 
   getPatterns(): void {
-    this.monitorService.getPattenrs()
+    this.monitorService.getPatterns()
       .subscribe(patterns => this.patterns = patterns);
   }
 
