@@ -1,0 +1,17 @@
+{
+  "munin-path": "/munin/",
+  "patterns": [
+    {
+      "title": "Traffic monitoring",
+      "pattern": "*"
+    },
+    {
+      "title": "Nemea",
+      "pattern": "nemea_supervisor/(.*)"
+    },
+    {
+      "title": "System status",
+      "pattern": "*"
+    }
+  ]
+}

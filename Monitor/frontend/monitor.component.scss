@@ -1,0 +1,22 @@
+@import 'colors';
+.box {
+  padding: 0;
+}
+.nav {
+  border-radius: 5px;
+  padding: 10px 15px;
+  background: $colorMain;
+}
+.nav a {
+  margin: 5px 10px;
+  color: transparentize($colorTextInverse, 0.3);
+  text-decoration: none;
+  transition: color .25s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    color: transparentize($colorTextInverse, 0.1);
+  }
+}
+.nav .active {
+  color: $colorTextInverse;
+}

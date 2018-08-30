@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="box">
+    <nav class="nav">
+      <a (click)="switchTab('Dashboard')" [class.active]="active === 'Dashboard'">Dashboard</a>
+      <a *ngFor="let pattern of patterns"
+         (click)="switchTab(pattern.title)"
+         [class.active]="active === pattern.title">{{ pattern.title }}</a>
+    </nav>
+    <div class="row">
+      <div class="col-sm-12">
+        <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
+      </div>
+      <select (change)="">
+        <option [value]="'day'">Day</option>
+        <option [value]="'week'">Week</option>
+        <option [value]="'month'">Month</option>
+        <option [value]="'year'">Year</option>
+      </select>
+    </div>
+  </div>
+</div>
