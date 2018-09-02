@@ -14,5 +14,8 @@ module_bp = modules.module.Module('monitor', __name__, url_prefix = '/monitor', 
 
 
 from .patterns import *
+from .images import *
 
 module_bp.add_url_rule('/patterns', view_func = get_patterns, methods = ['GET'])
+module_bp.add_url_rule('/graph/<image_name>', view_func = load_image, methods = ['GET'])
+module_bp.add_url_rule('/filenames/<pattern_title>', view_func = names_from_patterns, methods = ['GET'])
