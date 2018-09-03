@@ -13,22 +13,19 @@ export class ImageService {
     private http: HttpClient
   ) {
   }
+
+  /**
+   * Returns an image from server, based on image name
+   * @param imageUrl - Path to requested image relative to Munin home folder
+   * @note '../' in imageUrl is not supported.
+   */
   getImage(imageUrl: string): Observable<Blob> {
-    return this.http.get(imageUrl, { responseType: 'blob' });
+    return this.http.get('/monitor/graph/' + imageUrl, { responseType: 'blob' });
   }
 
-  imageToShow: any;
+  public imageToShow: any; // Helper variable to store image from createImageFromBlob function.
 
-  createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener("load", () => {
-      this.imageToShow = reader.result;
-    }, false);
 
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
 
 
 

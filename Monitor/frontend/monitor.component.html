@@ -10,12 +10,25 @@
       <div class="col-sm-12">
         <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
       </div>
-      <select (change)="">
-        <option [value]="'day'">Day</option>
-        <option [value]="'week'">Week</option>
-        <option [value]="'month'">Month</option>
-        <option [value]="'year'">Year</option>
-      </select>
+      <div class="col-sm-12">
+        <select (change)="setInterval()" title="interval">
+          <option [value]="'day'">Day</option>
+          <option [value]="'week'">Week</option>
+          <option [value]="'month'">Month</option>
+          <option [value]="'year'">Year</option>
+        </select>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <img [src]="imageToShow"
+             alt="Graph"
+             *ngIf="!isImageLoading; else noImageFound">
+        <ng-template #noImageFound>
+          <p class="lrg-form-error">Graph failed to load :(</p>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>

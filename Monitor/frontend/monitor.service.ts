@@ -16,11 +16,23 @@ export class MonitorService {
   ) { }
 
   /** GET patterns and their names from backend */
-  getPattenrs(): Observable<Pattern[]> {
+  getPatterns(): Observable<Pattern[]> {
     return this.http.get<Pattern[]>('/monitor/patterns').pipe(
       catchError(this.handleError('getPatterns', []))
     );
   }
+
+  /**
+   * GET links to graphs by category from backend
+   * To get list of graphs for dashboard, set category to "default"
+   * @param category - Category name to get graphs from.
+   */
+  getGraphs(category: string): Observable<string[]> {
+    return this.http.get<string[]>('/monitor/graphs/' + category).pipe(
+      catchError(this.handleError('getGraphs', []))
+    );
+  }
+
 
   /**
    * Handle Http operation that failed.
@@ -30,10 +42,9 @@ export class MonitorService {
    */
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-
-      console.error(error);
       console.error('Failed on ' + operation);
-
+      console.error(error);
+      //TODO: Notify user in GUI
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
