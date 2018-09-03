@@ -23,11 +23,5 @@ export class ImageService {
     return this.http.get('/monitor/graph/' + imageUrl, { responseType: 'blob' });
   }
 
-  public imageToShow: any; // Helper variable to store image from createImageFromBlob function.
-
-
-
-
-
 }
 
