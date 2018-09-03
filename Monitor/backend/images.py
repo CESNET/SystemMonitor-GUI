@@ -3,7 +3,7 @@ Monitor backend
 File: images.py
 Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
 
-Sending images from server to frontend.
+Loading image names and sending images to frontend.
 """
 from .patterns import *
 from liberouterapi import auth
@@ -12,7 +12,9 @@ import os
 import json
 import fnmatch
 
-# TODO: Call load_image multiple times based on file names (Send names to frontend?)
+from flask import send_from_directory
+
+# TODO: Call load_image multiple times based on file names (Send names to frontend? => Frontend will call image loading)
 
 # Load munin installation location from config
 def get_munin_folder():
@@ -35,7 +37,8 @@ def names_from_patterns(pattern_title):
     if selected_pattern is not None:
         filenames = []
         for file in os.listdir(get_munin_folder()):
-            if fnmatch.fnmatch(file, selected_pattern)
+            # TODO: Check if file is an image before returning it
+            if fnmatch.fnmatch(file, selected_pattern):
                 filenames.append(file)
         return filenames
     else:
@@ -51,4 +54,5 @@ def get_user_images():
 # Send image from disk to frontend.
 @auth.required()
 def load_image(filename):
+    # TODO: Check if file is an image
     return send_from_directory(get_munin_folder(), filename)
