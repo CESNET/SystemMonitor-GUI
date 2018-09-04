@@ -17,8 +17,9 @@ export class MonitorComponent implements OnInit {
   active: string = 'Dashboard'; //Currently active pattern name
   activePattern = null; //Currently active pattern
   graphLinks: string[] = []; // List of paths to graphs, loaded from backend
+  graphs: any[] = []; // Array of graph images to show
   isImageLoading: boolean = false;
-  imageToShow: any;
+  imagesToShow: any[] = [];
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -27,12 +28,21 @@ export class MonitorComponent implements OnInit {
 
   ngOnInit() {
     this.getPatterns();
-    this.getImageFromService('diskstats_iops-day.png');
+    this.getGraphLinks('default');
+    this.getImageFromService('diskstats_iops-day.png'); // TODO: Remove this
+    this.getImageFromService('diskstats_iops/data_data-day.png');
   }
 
+  /** Returns list of patterns from server */
   getPatterns(): void {
     this.monitorService.getPatterns()
       .subscribe(patterns => this.patterns = patterns);
+  }
+
+  /** Returns list of image links to use in getImageFromService function. */
+  getGraphLinks(category): void {
+    this.monitorService.getGraphs(category)
+      .subscribe(links => this.graphLinks = links);
   }
 
   /**
@@ -42,7 +52,7 @@ export class MonitorComponent implements OnInit {
   createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
-      this.imageToShow = reader.result;
+      this.imagesToShow.push(reader.result);
     }, false);
 
     if (image) {
@@ -60,7 +70,6 @@ export class MonitorComponent implements OnInit {
     this.imageService.getImage(imagePath).subscribe(data => {
       this.createImageFromBlob(data);
       this.isImageLoading = false;
-      this.imageToShow = this.imageService.imageToShow;
 
     }, error => {
       this.isImageLoading = false;
@@ -78,15 +87,17 @@ export class MonitorComponent implements OnInit {
       if(pattern['title'] === newTabName) {
         this.active = newTabName;
         this.activePattern = pattern;
+        this.getGraphLinks(newTabName);
         return;
       }
     }
     this.active = 'Dashboard';
     this.activePattern = null;
+    this.getGraphLinks('default');
 
   }
 
-  setInterval(): void {
+  setDisplayInterval(): void {
     console.log('Interval changed');
   }
 

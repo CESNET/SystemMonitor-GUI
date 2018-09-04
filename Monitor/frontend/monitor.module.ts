@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [{
   path: 'monitor',
-  component: MonitorComponent, // NOTE: Edit this
+  component: MonitorComponent,
   canActivate: [AuthGuard],
   data: {
     role: 10,

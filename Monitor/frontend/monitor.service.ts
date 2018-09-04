@@ -28,7 +28,7 @@ export class MonitorService {
    * @param category - Category name to get graphs from.
    */
   getGraphs(category: string): Observable<string[]> {
-    return this.http.get<string[]>('/monitor/graphs/' + category).pipe(
+    return this.http.get<string[]>('/monitor/filenames/' + category).pipe(
       catchError(this.handleError('getGraphs', []))
     );
   }

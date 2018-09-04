@@ -11,7 +11,7 @@
         <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
       </div>
       <div class="col-sm-12">
-        <select (change)="setInterval()" title="interval">
+        <select (change)="setDisplayInterval()" title="interval">
           <option [value]="'day'">Day</option>
           <option [value]="'week'">Week</option>
           <option [value]="'month'">Month</option>
@@ -21,9 +21,10 @@
 
     </div>
     <div class="row">
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <img [src]="imageToShow"
+      <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let image of imagesToShow">
+        <img [src]="image"
              alt="Graph"
+             class="img-responsive"
              *ngIf="!isImageLoading; else noImageFound">
         <ng-template #noImageFound>
           <p class="lrg-form-error">Graph failed to load :(</p>
