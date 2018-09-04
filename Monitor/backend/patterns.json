@@ -1,17 +1,20 @@
 {
-  "munin-path": "/munin/",
+  "munin-path": "/var/www/html/munin/liberouter.org/collector-nemea.liberouter.org/",
   "patterns": [
     {
       "title": "Traffic monitoring",
-      "pattern": "*"
+      "pattern": "*",
+      "enabled": "true"
     },
     {
       "title": "Nemea",
-      "pattern": "nemea_supervisor/(.*)"
+      "pattern": "nemea_supervisor/(.*)",
+      "enabled": "true"
     },
     {
       "title": "System status",
-      "pattern": "*"
+      "pattern": "*",
+      "enabled": "true"
     }
   ]
 }
