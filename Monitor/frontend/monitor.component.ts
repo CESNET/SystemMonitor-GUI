@@ -22,6 +22,7 @@ export class MonitorComponent implements OnInit {
   start: number = 0; // Index from imagesToShow to start displaying graphs from
   max: number = 18; // How many graphs should be on a page. Switched back to 18 after switching a tab
   loadMoreStep: number = 6; // How many graphs should load when "Load more" button is pressed
+  localLinks: string[] = [];
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -37,6 +38,12 @@ export class MonitorComponent implements OnInit {
   getPatterns(): void {
     this.monitorService.getPatterns()
       .subscribe(patterns => this.patterns = patterns);
+  }
+
+  /** Simplified version of getGraphLinks, to use on getting dropdown options for "Add graph" form */
+  getFormLinks(category): void {
+    this.monitorService.getGraphs(category)
+      .subscribe(links => this.localLinks = links);
   }
 
   /** Returns list of image links to use in getImageFromService function. */

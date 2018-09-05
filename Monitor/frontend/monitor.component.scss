@@ -27,3 +27,19 @@
   text-align: center;
 }
 
+.card {
+  position: relative;
+  height: 100%;
+  text-align: center;
+  padding: 0;
+}
+.card-content {
+  padding: 20px;
+}
+.card-header {
+  background: $colorMain;
+  padding-bottom: 0;
+  h4 {
+    color: $colorTextInverse;
+  }
+}

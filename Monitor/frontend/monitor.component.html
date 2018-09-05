@@ -1,11 +1,14 @@
 <div class="container-fluid">
   <div class="box">
+    <!-- Navbar -->
     <nav class="nav">
       <a (click)="switchTab('Dashboard')" [class.active]="active === 'Dashboard'">Dashboard</a>
       <a *ngFor="let pattern of patterns"
          (click)="switchTab(pattern.title)"
          [class.active]="active === pattern.title">{{ pattern.title }}</a>
     </nav>
+
+    <!-- Toolbar -->
     <div class="row">
       <div class="col-sm-12">
         <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
@@ -19,8 +22,30 @@
           <option [value]="'all'" *ngIf="active !== 'Dashboard'">All</option>
         </select>
       </div>
-
     </div>
+
+    <!-- Add graph form-->
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-4 offset-md-3 offset-lg-4" *ngIf="active == 'Dashboard'">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="center-text">Add graph</h4>
+          </div>
+          <div class="card-content">
+            <label for="add-cat">Category</label>
+            <select title="category" #c id="add-cat" (change)="getFormLinks(c.value)">
+              <option disabled selected>Select</option>
+              <option *ngFor="let pattern of patterns" value="{{pattern.title}}">{{pattern.title}}</option>
+            </select>
+            <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link">
+              <option *ngFor="let link of localLinks" value="link">{{link}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info message -->
     <div class="row">
       <div class="col-sm-12" >
         <div class="d-flex justify-content-center">
@@ -29,10 +54,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Graphs -->
     <div class="row">
-      <div class="col-sm-12 col-md-6 col-lg-4" *ngIf="active == 'Dashboard'">
-        <h3 class="center-text">Add graph</h3>
-      </div>
       <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let image of imagesToShow | slice:start:start+max">
         <img [src]="image"
              alt="Loading..."
@@ -42,8 +66,9 @@
           <p class="lrg-form-error">Graph failed to load</p>
         </ng-template>
       </div>
-
     </div>
+
+    <!-- "Load more" button -->
     <div class="row">
       <div class="col-sm-12" *ngIf="start+max < graphLinks.length">
         <div class="d-flex justify-content-center">
@@ -51,5 +76,6 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
+
+  </div> <!-- .box -->
+</div> <!-- .container-fluid -->
