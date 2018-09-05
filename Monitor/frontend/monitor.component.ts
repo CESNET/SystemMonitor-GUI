@@ -45,13 +45,20 @@ export class MonitorComponent implements OnInit {
       .subscribe(links => this.graphLinks = links, err => console.error(err), () => this.loadImages(0));
   }
 
+  /**
+   * Combines together functions for getting graph names and function for getting images.
+   * @param startAt - start at this index from graphLinks
+   */
   loadImages(startAt: number): void {
+
     let i = 0;
     for (let image in this.graphLinks) {
+      // Are we over index, on which we want to start at?
       if (i >= startAt) {
         this.getImageFromService(this.graphLinks[image]);
       }
       i++;
+      // We are over limit, end.
       if (i >= this.max) {
         break;
       }
@@ -60,9 +67,9 @@ export class MonitorComponent implements OnInit {
   }
 
   /**
-   * Creates image from blob using JS FileReader.
+   * Creates image from blob using JS FileReader and adds it into imagesToShow variable.
    * @param image - Blob returned from server
-   * */
+   */
   createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
@@ -78,7 +85,7 @@ export class MonitorComponent implements OnInit {
    * Returns an image based on its path relative to Munin home folder.
    * @param imagePath - Path to an image relative to munin home folder.
    * @note '../' is not supported for security reasons
-   * */
+   */
   getImageFromService(imagePath: string) {
     this.imageService.getImage(imagePath).subscribe(data => {
       this.createImageFromBlob(data);
@@ -95,10 +102,14 @@ export class MonitorComponent implements OnInit {
    * @param newTabName - title of a tab you want to switch to
    */
   switchTab(newTabName: string): void {
+    // Remove previously loaded images
+    this.imagesToShow = [];
+    this.max = 18;
+
+    // Check if selected pattern is valid
     for(let pattern of this.patterns) {
       if(pattern['title'] === newTabName) {
-        this.imagesToShow = [];
-        this.max = 18;
+        // Pattern is valid, load new images
         this.isImageLoading = true;
         this.active = newTabName;
         this.activePattern = pattern;
@@ -106,18 +117,20 @@ export class MonitorComponent implements OnInit {
         return;
       }
     }
+    // Pattern is not valid, load dashboard
     this.active = 'Dashboard';
     this.activePattern = null;
     this.getGraphLinks('default');
 
   }
 
+  /** Increase max number of images and load new graphs */
   loadMore(): void {
-    this.max += this.loadMoreStep; // Two rows of graphs on large screens
+    this.max += this.loadMoreStep;
     this.loadImages(this.max - this.loadMoreStep);
 
   }
-
+  /** Change interval of selected graphs (on dashboard) or on all graphs (outside of dashboard) */
   setDisplayInterval(): void {
     console.log('Interval changed');
   }
