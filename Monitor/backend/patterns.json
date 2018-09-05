@@ -3,18 +3,23 @@
   "patterns": [
     {
       "title": "Traffic monitoring",
-      "pattern": "*",
+      "pattern": "traffic-monitoring/.*_(flows|packets|bytes)",
       "enabled": "true"
     },
     {
       "title": "Nemea",
-      "pattern": "nemea_supervisor/(.*)",
+      "pattern": "nemea_supervisor/nemea_.*",
       "enabled": "true"
     },
     {
       "title": "System status",
-      "pattern": "*",
+      "pattern": "([^/]*)/.*",
       "enabled": "true"
-    }
+    },
+    {
+      "title": "Diskstats iops",
+      "pattern": "diskstats_iops/.*",
+      "enabled": "true"
+    },
   ]
 }

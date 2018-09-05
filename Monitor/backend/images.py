@@ -11,6 +11,7 @@ from liberouterapi import auth
 import os
 import json
 import fnmatch
+import re
 
 from flask import send_from_directory
 
@@ -36,13 +37,26 @@ def names_from_patterns(pattern_title):
             break
     if selected_pattern is not None:
         filenames = []
-        for file in os.listdir(get_munin_folder()):
-            # TODO: Check if file is an image before returning it
-            if fnmatch.fnmatch(file, selected_pattern):
-                filenames.append(file)
-        return filenames
+        if '/' in selected_pattern:
+            # pattern contains subdirectory, we need to use os.walk
+            pathpattern, filepattern = os.path.split(selected_pattern)
+            print(pathpattern)
+            print(filepattern)
+            for path, subdirs, files in os.walk(get_munin_folder()):
+                # Path could be regex, multiple directories might match
+                if re.match('.*[/]?' + pathpattern, path) is not None:
+                    regex = re.compile(filepattern)
+                    filenames = filenames + [f for f in filter(regex.search, files) if fnmatch.fnmatch(f, '*.png')]
+
+        else:
+            # pattern is not for subdirectory, listdir is enough
+            filenames = [file for file in os.listdir(get_munin_folder()) if fnmatch.fnmatch(file, selected_pattern)]
+        print(filenames)
+        print('filenames sent')
+        return json.dumps(filenames)
+
     else:
-        return get_user_images()
+        return json.dumps(get_user_images())
 
 # Returns user-selected graph names from database.
 @auth.required()
