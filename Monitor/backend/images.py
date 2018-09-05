@@ -50,9 +50,8 @@ def names_from_patterns(pattern_title):
 
         else:
             # pattern is not for subdirectory, listdir is enough
-            filenames = [file for file in os.listdir(get_munin_folder()) if fnmatch.fnmatch(file, selected_pattern)]
-        print(filenames)
-        print('filenames sent')
+            regex = re.compile(selected_pattern)
+            filenames = [f for f in filter(regex.search, os.listdir(get_munin_folder())) if fnmatch.fnmatch(f, '*.png')]
         return json.dumps(filenames)
 
     else:
