@@ -28,9 +28,13 @@ def get_munin_folder():
 # Returns array of file names based on patterns from config.
 @auth.required()
 def names_from_patterns(pattern_title):
+    # We are loading dashboard images, no need to load patterns.
+    if pattern_title == 'default':
+        return get_user_images()
+
     patterns = json.loads(get_patterns())
     selected_pattern = None
-
+    munin_folder = get_munin_folder()
     for pattern in patterns:
         if pattern['title'] == pattern_title:
             selected_pattern = pattern['pattern']
@@ -40,22 +44,26 @@ def names_from_patterns(pattern_title):
         if '/' in selected_pattern:
             # pattern contains subdirectory, we need to use os.walk
             pathpattern, filepattern = os.path.split(selected_pattern)
-            print(pathpattern)
-            print(filepattern)
-            for path, subdirs, files in os.walk(get_munin_folder()):
+
+            for path, subdirs, files in os.walk(munin_folder):
                 # Path could be regex, multiple directories might match
                 if re.match('.*[/]?' + pathpattern, path) is not None:
                     regex = re.compile(filepattern)
-                    filenames = filenames + [f for f in filter(regex.search, files) if fnmatch.fnmatch(f, '*.png')]
+                    newnames = [f for f in filter(regex.search, files) if fnmatch.fnmatch(f, '*.png')]
+                    localpath = path.replace(munin_folder, "")
+                    filenames = filenames + [localpath + '/' + f for f in newnames]
+                    print(filenames)
 
         else:
             # pattern is not for subdirectory, listdir is enough
             regex = re.compile(selected_pattern)
-            filenames = [f for f in filter(regex.search, os.listdir(get_munin_folder())) if fnmatch.fnmatch(f, '*.png')]
+            filenames = [f for f in filter(regex.search, os.listdir(munin_folder)) if fnmatch.fnmatch(f, '*.png')]
+        print(filenames)
         return json.dumps(filenames)
 
     else:
-        return json.dumps(get_user_images())
+        # fallback option for invalid patterns
+        return get_user_images()
 
 # Returns user-selected graph names from database.
 @auth.required()
