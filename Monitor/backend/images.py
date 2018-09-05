@@ -49,16 +49,12 @@ def names_from_patterns(pattern_title):
                 # Path could be regex, multiple directories might match
                 if re.match('.*[/]?' + pathpattern, path) is not None:
                     regex = re.compile(filepattern)
-                    newnames = [f for f in filter(regex.search, files) if fnmatch.fnmatch(f, '*.png')]
                     localpath = path.replace(munin_folder, "")
-                    filenames = filenames + [localpath + '/' + f for f in newnames]
-                    print(filenames)
-
+                    filenames = filenames + [localpath + '/' + f for f in filter(regex.search, files) if fnmatch.fnmatch(f, '*.png')]
         else:
             # pattern is not for subdirectory, listdir is enough
             regex = re.compile(selected_pattern)
             filenames = [f for f in filter(regex.search, os.listdir(munin_folder)) if fnmatch.fnmatch(f, '*.png')]
-        print(filenames)
         return json.dumps(filenames)
 
     else:
