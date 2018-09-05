@@ -42,7 +42,7 @@ export class MonitorService {
    */
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error('Failed on ' + operation);
+      console.error('Failed on ' + operation + '. Error details:');
       console.error(error);
       //TODO: Notify user in GUI
       // Let the app keep running by returning an empty result.

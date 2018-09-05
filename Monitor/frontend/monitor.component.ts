@@ -17,9 +17,11 @@ export class MonitorComponent implements OnInit {
   active: string = 'Dashboard'; //Currently active pattern name
   activePattern = null; //Currently active pattern
   graphLinks: string[] = []; // List of paths to graphs, loaded from backend
-  graphs: any[] = []; // Array of graph images to show
   isImageLoading: boolean = false;
-  imagesToShow: any[] = [];
+  imagesToShow: any[] = []; // Array of graph images
+  start: number = 0; // Index from imagesToShow to start displaying graphs from
+  max: number = 18; // How many graphs should be on a page. Switched back to 18 after switching a tab
+  loadMoreStep: number = 6; // How many graphs should load when "Load more" button is pressed
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -29,8 +31,6 @@ export class MonitorComponent implements OnInit {
   ngOnInit() {
     this.getPatterns();
     this.getGraphLinks('default');
-    this.getImageFromService('diskstats_iops-day.png'); // TODO: Remove this
-    this.getImageFromService('diskstats_iops/data_data-day.png');
   }
 
   /** Returns list of patterns from server */
@@ -42,7 +42,21 @@ export class MonitorComponent implements OnInit {
   /** Returns list of image links to use in getImageFromService function. */
   getGraphLinks(category): void {
     this.monitorService.getGraphs(category)
-      .subscribe(links => this.graphLinks = links);
+      .subscribe(links => this.graphLinks = links, err => console.error(err), () => this.loadImages(0));
+  }
+
+  loadImages(startAt: number): void {
+    let i = 0;
+    for (let image in this.graphLinks) {
+      if (i >= startAt) {
+        this.getImageFromService(this.graphLinks[image]);
+      }
+      i++;
+      if (i >= this.max) {
+        break;
+      }
+    }
+    this.isImageLoading = false;
   }
 
   /**
@@ -66,10 +80,8 @@ export class MonitorComponent implements OnInit {
    * @note '../' is not supported for security reasons
    * */
   getImageFromService(imagePath: string) {
-    this.isImageLoading = true;
     this.imageService.getImage(imagePath).subscribe(data => {
       this.createImageFromBlob(data);
-      this.isImageLoading = false;
 
     }, error => {
       this.isImageLoading = false;
@@ -85,6 +97,9 @@ export class MonitorComponent implements OnInit {
   switchTab(newTabName: string): void {
     for(let pattern of this.patterns) {
       if(pattern['title'] === newTabName) {
+        this.imagesToShow = [];
+        this.max = 18;
+        this.isImageLoading = true;
         this.active = newTabName;
         this.activePattern = pattern;
         this.getGraphLinks(newTabName);
@@ -94,6 +109,12 @@ export class MonitorComponent implements OnInit {
     this.active = 'Dashboard';
     this.activePattern = null;
     this.getGraphLinks('default');
+
+  }
+
+  loadMore(): void {
+    this.max += this.loadMoreStep; // Two rows of graphs on large screens
+    this.loadImages(this.max - this.loadMoreStep);
 
   }
 

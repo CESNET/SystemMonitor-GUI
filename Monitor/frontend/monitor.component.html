@@ -16,19 +16,39 @@
           <option [value]="'week'">Week</option>
           <option [value]="'month'">Month</option>
           <option [value]="'year'">Year</option>
+          <option [value]="'all'" *ngIf="active !== 'Dashboard'">All</option>
         </select>
       </div>
 
     </div>
     <div class="row">
-      <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let image of imagesToShow">
+      <div class="col-sm-12" >
+        <div class="d-flex justify-content-center">
+          <h2 *ngIf="isImageLoading">Loading...</h2>
+          <h2 *ngIf="graphLinks.length == 0 && !isImageLoading">Nothing found</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-4" *ngIf="active == 'Dashboard'">
+        <h3 class="center-text">Add graph</h3>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let image of imagesToShow | slice:start:start+max">
         <img [src]="image"
-             alt="Graph"
+             alt="Loading..."
              class="img-responsive"
              *ngIf="!isImageLoading; else noImageFound">
         <ng-template #noImageFound>
-          <p class="lrg-form-error">Graph failed to load :(</p>
+          <p class="lrg-form-error">Graph failed to load</p>
         </ng-template>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-sm-12" *ngIf="start+max < graphLinks.length">
+        <div class="d-flex justify-content-center">
+          <button (click)="loadMore()" class="btn btn-primary">Load more</button>
+        </div>
       </div>
     </div>
   </div>
