@@ -40,6 +40,8 @@
             <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link">
               <option *ngFor="let link of localLinks" value="link">{{link}}</option>
             </select>
+            <p *ngIf="localLinks.length == 0 && localLinksLoaded">No graphs in selected category.</p>
+            <p *ngIf="!localLinksLoaded">Loading..</p>
           </div>
         </div>
       </div>
