@@ -36,7 +36,7 @@ def add_interval_filter(intervals, pattern):
     """
     if interval != []:
         pattern = pattern + "-(" + intervals[0]
-        for i in range(1, len(intervals))
+        for i in range(1, len(intervals)):
             pattern = pattern + '|' + intervals[i]
         pattern = pattern + ')'
     return pattern
