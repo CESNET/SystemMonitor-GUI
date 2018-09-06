@@ -20,6 +20,6 @@
       "title": "Diskstats iops",
       "pattern": "diskstats_iops/.*",
       "enabled": "true"
-    },
+    }
   ]
 }
