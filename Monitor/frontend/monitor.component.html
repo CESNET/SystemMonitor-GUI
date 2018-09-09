@@ -33,33 +33,36 @@
             <h4 class="center-text">Add graph</h4>
           </div>
           <div class="card-content">
-            <label for="add-cat">Category</label>
-            <select title="category" #c id="add-cat" (change)="getFormLinks(c.value)">
-              <option disabled selected>Select</option>
-              <option *ngFor="let pattern of patterns" value="{{pattern.title}}">{{pattern.title}}</option>
-            </select>
-            <input *ngIf="localLinks.length != 0"  type="text" [(ngModel)]="searchText" placeholder="Search graphs">
-            <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link">
-              <option *ngFor="let link of localLinks | filter: searchText" value="link">{{link}}</option>
-            </select>
-            <p *ngIf="localLinks.length == 0 && localLinksLoaded">No graphs in selected category.</p>
-            <p *ngIf="!localLinksLoaded">Loading..</p>
             <div class="row">
-              <div class="col-sm-12 col-md-3">
-                <label for="checkDay">Day</label>
-                <input type="checkbox" [(ngModel)]="checkDay" id="checkDay">
+              <div class="col-sm-12">
+                <label for="add-cat">Category</label>
+                <select title="category" #c id="add-cat" [(ngModel)]="selectedPattern" (change)="getFormLinks(selectedPattern)">
+                  <option disabled selected>Select</option>
+                  <option *ngFor="let pattern of patterns" value="{{pattern.title}}">{{pattern.title}}</option>
+                </select>
               </div>
-              <div class="col-sm-12 col-md-3">
-                <label for="checkWeek">Week</label>
-                <input type="checkbox" [(ngModel)]="checkWeek" id="checkWeek">
+              <div *ngIf="localLinks.length != 0" class="col-sm-12 col-md-6">
+                <input  type="text" [(ngModel)]="searchText" id="search-text" placeholder="Search graphs">
               </div>
-              <div class="col-sm-12 col-md-3">
-                <label for="checkMonth">Month</label>
-                <input type="checkbox" [(ngModel)]="checkMonth" id="checkMonth">
+              <div class="col-sm-12 col-md-6" *ngIf="localLinks.length != 0">
+                <select (change)="getFormLinks(selectedPattern)" [(ngModel)]="searchInterval" title="interval" id="search-interval-select">
+                  <option [value]="'day'">Day</option>
+                  <option [value]="'week'">Week</option>
+                  <option [value]="'month'">Month</option>
+                  <option [value]="'year'">Year</option>
+                  <option [value]="'all'" selected>All</option>
+                </select>
+                <label for="search-interval-select">Filter interval</label>
               </div>
-              <div class="col-sm-12 col-md-3">
-                <label for="checkYear">Year</label>
-                <input type="checkbox" [(ngModel)]="checkYear" id="checkYear">
+              <div class="col-sm-12">
+                <p *ngIf="localLinks.length == 0 && localLinksLoaded">No graphs in selected category.</p>
+                <p *ngIf="!localLinksLoaded">Loading..</p>
+                <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link">
+                  <option *ngFor="let link of localLinks | filter: searchText" value="link">{{link}}</option>
+                </select>
+              </div>
+              <div class="col-sm-12" *ngIf="localLinks.length != 0">
+                <button (click)="addGraph()" class="btn btn-primary">Add</button>
               </div>
             </div>
           </div>

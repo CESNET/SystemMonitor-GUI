@@ -25,14 +25,11 @@ export class MonitorComponent implements OnInit {
   max: number = 18; // How many graphs should be on a page. Switched back to 18 after switching a tab
   loadMoreStep: number = 6; // How many graphs should load when "Load more" button is pressed
   searchText: string;
+  selectedPattern: string;
   localLinks: string[] = [];
   localLinksLoaded: boolean = true;
   displayInterval: string = 'default'; // Value of interval dropdown
-  // Checkboxes
-  checkDay: boolean = true;
-  checkWeek: boolean = true;
-  checkMonth: boolean = true;
-  checkYear: boolean = true;
+  searchInterval: string = 'all';
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -54,10 +51,17 @@ export class MonitorComponent implements OnInit {
   getFormLinks(category): void {
     this.localLinksLoaded = false;
     this.localLinks = [];
-
-    this.monitorService.getGraphsWithIntervals(category, ['day', 'week', 'month', 'year'])
+    let intervals = [];
+    if (this.searchInterval == 'all') {
+      intervals = ['day', 'week', 'month', 'year']
+    }
+    else {
+      intervals = [this.searchInterval];
+    }
+    this.monitorService.getGraphsWithIntervals(category, intervals)
       .subscribe(links => this.localLinks = links, err => console.error(err), () => this.localLinksLoaded = true);
   }
+
 
   /** Returns list of image links to use in getImageFromService function. */
   getGraphLinks(category): void {
@@ -175,6 +179,10 @@ export class MonitorComponent implements OnInit {
     else {
       // TODO
     }
+
+  }
+  addGraph(): void {
+
   }
 
 }
