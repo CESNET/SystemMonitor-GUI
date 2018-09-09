@@ -26,6 +26,7 @@ export class MonitorService {
   /**
    * GET links to graphs by category from backend
    * To get list of graphs for dashboard, set category to "default"
+   *
    * @param category - Category name to get graphs from.
    */
   getGraphs(category: string): Observable<string[]> {
@@ -34,10 +35,24 @@ export class MonitorService {
     );
   }
 
+  /**
+   * POST operation.
+   * Get links to graphs by category with interval filtering.
+   *
+   * @param category - Name of pattern to load graphs from
+   * @param intervals - list of intervals to add to filter. Valid values are 'day', 'week', 'month', 'year'.
+   */
   getGraphsWithIntervals(category: string, intervals: string[]): Observable<string[]> {
-    return this.http.post<string[]>('/monitor/filenames-filter/' + category, {'intervals': intervals})
+    return this.http.post<string[]>('/monitor/filenames-filter/' + category, {'intervals': intervals}).pipe(
+      catchError(this.handleError('getGraphsWithIntervals', []))
+    );
   }
 
+  addUserGraph(graphLinks: string[]): Observable<object> {
+    return this.http.post<object>('/monitor/add-graph/', {'images': graphLinks}).pipe(
+      catchError(this.handleError('addUserGraph', []))
+    );
+  }
 
   /**
    * Handle Http operation that failed.

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Pattern } from './common/pattern';
@@ -30,6 +30,11 @@ export class MonitorComponent implements OnInit {
   localLinksLoaded: boolean = true;
   displayInterval: string = 'default'; // Value of interval dropdown
   searchInterval: string = 'all';
+
+  graphToAdd: string;
+
+  graphBuffer: string[] = [];
+
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -39,6 +44,11 @@ export class MonitorComponent implements OnInit {
   ngOnInit() {
     this.getPatterns();
     this.getGraphLinks('default');
+  }
+
+  ngOnDestroy() {
+    this.saveGraphs();
+    this.graphBuffer = [];
   }
 
   /** Returns list of patterns from server */
@@ -142,7 +152,10 @@ export class MonitorComponent implements OnInit {
         this.isImageLoading = true;
         this.active = newTabName;
         this.activePattern = pattern;
-        this.getGraphLinks(newTabName);
+        this.setDisplayInterval(); // To keep set interval
+        // Save user graphs and empty buffer
+        this.saveGraphs();
+        this.graphBuffer = [];
         return;
       }
     }
@@ -151,6 +164,7 @@ export class MonitorComponent implements OnInit {
     this.activePattern = null;
     this.displayInterval = 'default';
     this.getGraphLinks('default');
+
 
   }
 
@@ -181,8 +195,16 @@ export class MonitorComponent implements OnInit {
     }
 
   }
-  addGraph(): void {
 
+  addGraph(graphName: string) {
+    this.getImageFromService(graphName);
+    this.graphBuffer.push(graphName);
+    console.log(graphName);
+  }
+
+  /** Add graph to users list of graphs */
+  saveGraphs(): void {
+    this.monitorService.addUserGraph(this.graphBuffer).subscribe();
   }
 
 }

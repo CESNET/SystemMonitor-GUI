@@ -57,12 +57,12 @@
               <div class="col-sm-12">
                 <p *ngIf="localLinks.length == 0 && localLinksLoaded">No graphs in selected category.</p>
                 <p *ngIf="!localLinksLoaded">Loading..</p>
-                <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link">
-                  <option *ngFor="let link of localLinks | filter: searchText" value="link">{{link}}</option>
+                <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link" [(ngModel)]="graphToAdd">
+                  <option *ngFor="let link of localLinks | filter: searchText" [value]="link">{{link}}</option>
                 </select>
               </div>
               <div class="col-sm-12" *ngIf="localLinks.length != 0">
-                <button (click)="addGraph()" class="btn btn-primary">Add</button>
+                <button (click)="addGraph(graphToAdd)" class="btn btn-primary">Add</button>
               </div>
             </div>
           </div>
