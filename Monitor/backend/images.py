@@ -74,3 +74,13 @@ def get_user_images():
     session = auth.lookup(request.headers.get('lgui-Authorization', None))
     user = session['user']
     return json.dumps(get_images_by_user(user))
+
+def create_db_string(str, image_list):
+    """ Adds image_list to str as semicolon separated list of images """
+    for file in image_list:
+        if str == '':
+            # write first item
+            str = file + ';'
+        else:
+            str = str + ';' + file
+    return str
