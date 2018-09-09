@@ -7,6 +7,16 @@ Backend initialization using liberouter GUI.
 """
 
 from liberouterapi import config, modules
+from liberouterapi.dbConnector import dbConnector
+
+# Get Netopeer backend config
+config.load(path = __path__[0] + '/config.ini')
+
+db_conn = dbConnector("monitor",
+        provider = "mongodb",
+        config = {
+            'database' : config['monitor']['database']
+            })
 
 
 # Register a blueprint
@@ -14,7 +24,6 @@ module_bp = modules.module.Module('monitor', __name__, url_prefix = '/monitor', 
 
 
 from .patterns import *
-
 from .communications import *
 
 # Returns patterns and their names from config

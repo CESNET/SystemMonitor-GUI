@@ -6,6 +6,7 @@ Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
 Generation of image names from patterns and filtering them.
 """
 from .patterns import *
+from .db import *
 from liberouterapi import auth
 
 import os
@@ -14,13 +15,12 @@ import fnmatch
 import re
 
 
-
 def get_munin_folder():
     """ Load munin installation location from config """
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
     json_url = os.path.join(SITE_ROOT, 'patterns.json')
     data = json.load(open(json_url))
-    # TODO: Check if directory exists to prevent crashes
+    # TODO: Check if directory exists to prevent crashes, notify user
     return data['munin-path']
 
 def add_interval_filter(intervals, pattern):
@@ -48,9 +48,8 @@ def names_from_patterns(pattern):
     # We are loading dashboard images, skip rest of this function
     if pattern == None:
         return get_user_images()
-
-    munin_folder = get_munin_folder()
-    if pattern is not None:
+    else:
+        munin_folder = get_munin_folder()
         filenames = []
         if '/' in pattern:
             # pattern contains subdirectory, we need to use os.walk
@@ -68,13 +67,10 @@ def names_from_patterns(pattern):
             filenames = [f for f in filter(regex.search, os.listdir(munin_folder)) if fnmatch.fnmatch(f, '*.png')]
         return json.dumps(filenames)
 
-    else:
-        # fallback option for invalid patterns
-        return get_user_images()
 
-#
 @auth.required()
 def get_user_images():
     """ Returns user-selected graph names from database. """
-    # TODO: Implement this
-    return [];
+    session = auth.lookup(request.headers.get('lgui-Authorization', None))
+    user = session['user']
+    return json.dumps(get_images_by_user(user))

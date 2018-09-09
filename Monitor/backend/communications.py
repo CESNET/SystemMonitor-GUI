@@ -1,6 +1,6 @@
 """
 Monitor backend
-File: images.py
+File: communications.py
 Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
 
 Handling communications between frontend and backend
