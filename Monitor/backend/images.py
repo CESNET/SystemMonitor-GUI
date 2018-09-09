@@ -8,6 +8,7 @@ Generation of image names from patterns and filtering them.
 from .patterns import *
 from .db import *
 from liberouterapi import auth
+from flask import request
 
 import os
 import json
@@ -34,11 +35,12 @@ def add_interval_filter(intervals, pattern):
         Returns:
          New pattern that includes interval filtering
     """
-    if interval != []:
+    if intervals != []:
         pattern = pattern + "-(" + intervals[0]
         for i in range(1, len(intervals)):
             pattern = pattern + '|' + intervals[i]
         pattern = pattern + ')'
+    print('Generated new pattern: ' + pattern)
     return pattern
 
 
@@ -73,7 +75,7 @@ def get_user_images():
     """ Returns user-selected graph names from database. """
     session = auth.lookup(request.headers.get('lgui-Authorization', None))
     user = session['user']
-    return json.dumps(get_images_by_user(user))
+    return json.dumps(get_images_by_user(user.username))
 
 def create_db_string(str, image_list):
     """ Adds image_list to str as semicolon separated list of images """

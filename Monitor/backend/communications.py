@@ -12,7 +12,7 @@ from .patterns import *
 from .images import *
 import json
 
-from flask import send_from_directory
+from flask import send_from_directory, request
 
 @auth.required()
 def load_image(filename):
@@ -25,6 +25,8 @@ def load_filenames(pattern_title):
     return names_from_patterns(pattern_from_name(pattern_title))
 
 @auth.required()
-def load_filenames_with_interval(pattern_title, intervals):
+def load_filenames_with_interval(pattern_title):
     """ Load image names with interval filtering """
+    data = request.json
+    intervals = data['intervals']
     return names_from_patterns(add_interval_filter(intervals, pattern_from_name(pattern_title)))
