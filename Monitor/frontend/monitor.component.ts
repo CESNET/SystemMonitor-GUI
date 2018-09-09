@@ -5,6 +5,8 @@ import { Pattern } from './common/pattern';
 import { MonitorService } from "./monitor.service";
 import { ImageService } from "./common/image.service";
 
+import { FilterPipe } from "./common/filter.pipe";
+
 @Component({
   selector: 'app-monitor',
   templateUrl: './monitor.component.html',
@@ -22,14 +24,15 @@ export class MonitorComponent implements OnInit {
   start: number = 0; // Index from imagesToShow to start displaying graphs from
   max: number = 18; // How many graphs should be on a page. Switched back to 18 after switching a tab
   loadMoreStep: number = 6; // How many graphs should load when "Load more" button is pressed
+  searchText: string;
   localLinks: string[] = [];
   localLinksLoaded: boolean = true;
-  displayInterval: string = 'all'; // Value of interval dropdown
+  displayInterval: string = 'default'; // Value of interval dropdown
   // Checkboxes
-  checkDay: boolean;
-  checkWeek: boolean;
-  checkMonth: boolean;
-  checkYear: boolean;
+  checkDay: boolean = true;
+  checkWeek: boolean = true;
+  checkMonth: boolean = true;
+  checkYear: boolean = true;
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -51,7 +54,8 @@ export class MonitorComponent implements OnInit {
   getFormLinks(category): void {
     this.localLinksLoaded = false;
     this.localLinks = [];
-    this.monitorService.getGraphs(category)
+
+    this.monitorService.getGraphsWithIntervals(category, ['day', 'week', 'month', 'year'])
       .subscribe(links => this.localLinks = links, err => console.error(err), () => this.localLinksLoaded = true);
   }
 
@@ -141,7 +145,7 @@ export class MonitorComponent implements OnInit {
     // Pattern is not valid, load dashboard
     this.active = 'Dashboard';
     this.activePattern = null;
-    this.displayInterval = 'all';
+    this.displayInterval = 'default';
     this.getGraphLinks('default');
 
   }
@@ -159,7 +163,7 @@ export class MonitorComponent implements OnInit {
       console.log(this.displayInterval);
       this.graphLinks = [];
       this.imagesToShow = [];
-      if (this.displayInterval == 'all') {
+      if (this.displayInterval == 'all' || this.displayInterval == 'default') {
         this.getGraphLinks(this.active);
       }
       else {

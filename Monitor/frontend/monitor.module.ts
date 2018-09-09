@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule} from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { FilterPipe} from "./common/filter.pipe";
 
 import { MonitorComponent } from "./monitor.component";
 
@@ -34,7 +35,8 @@ const routes: Routes = [{
     NgbModule.forRoot(),
   ],
   declarations: [
-    MonitorComponent
+    MonitorComponent,
+    FilterPipe
   ],
   providers: [
     SafePipe

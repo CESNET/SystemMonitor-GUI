@@ -14,6 +14,7 @@
             <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
             <label for="interval-select">Set interval</label>
             <select (change)="setDisplayInterval()" [(ngModel)]="displayInterval" title="interval" id="interval-select">
+              <option disabled selected [value]="'default'">Set interval</option>
               <option [value]="'day'">Day</option>
               <option [value]="'week'">Week</option>
               <option [value]="'month'">Month</option>
@@ -37,8 +38,9 @@
               <option disabled selected>Select</option>
               <option *ngFor="let pattern of patterns" value="{{pattern.title}}">{{pattern.title}}</option>
             </select>
+            <input *ngIf="localLinks.length != 0"  type="text" [(ngModel)]="searchText" placeholder="Search graphs">
             <select *ngIf="localLinks.length != 0" title="graphLink" id="add-link">
-              <option *ngFor="let link of localLinks" value="link">{{link}}</option>
+              <option *ngFor="let link of localLinks | filter: searchText" value="link">{{link}}</option>
             </select>
             <p *ngIf="localLinks.length == 0 && localLinksLoaded">No graphs in selected category.</p>
             <p *ngIf="!localLinksLoaded">Loading..</p>
