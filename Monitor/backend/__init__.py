@@ -35,7 +35,8 @@ module_bp.add_url_rule('/graph/<path:filename>', view_func = load_image, methods
 module_bp.add_url_rule('/filenames/<pattern_title>', view_func = load_filenames, methods = ['GET'])
 # Returns list of image paths with interval filtering. Body of request should contain list of intervals in parameter intervals.
 module_bp.add_url_rule('/filenames-filter/<pattern_title>', view_func = load_filenames_with_interval, methods = ['POST'])
-# Returns list of image paths from DB by username
+# Returns list of image paths from DB by username. Can also be accessed by sending value 'default' to path /filenames/
 module_bp.add_url_rule('/user', view_func = get_user_images, methods = ['GET'])
-
-module_bp.add_url_rule('/user-add/<string:user>', view_func = add_image_to_db, methods = ['GET'])
+# Adds graph name to user's database entry. Graph is autmatically added to user sending this request.
+# Graph list should be in request body.
+module_bp.add_url_rule('/add-graph', view_func = add_user_images, methods = ['POST'])

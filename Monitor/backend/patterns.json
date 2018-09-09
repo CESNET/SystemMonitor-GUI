@@ -3,12 +3,12 @@
   "patterns": [
     {
       "title": "Traffic monitoring",
-      "pattern": "traffic-monitoring/.*_(flows|packets|bytes)",
+      "pattern": ".*_(flows|packets|bytes)",
       "enabled": "true"
     },
     {
       "title": "Nemea",
-      "pattern": "nemea_supervisor/nemea_.*",
+      "pattern": "nemea_.*",
       "enabled": "true"
     },
     {

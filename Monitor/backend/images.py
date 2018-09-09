@@ -40,7 +40,6 @@ def add_interval_filter(intervals, pattern):
         for i in range(1, len(intervals)):
             pattern = pattern + '|' + intervals[i]
         pattern = pattern + ')'
-    print('Generated new pattern: ' + pattern)
     return pattern
 
 
@@ -68,21 +67,3 @@ def names_from_patterns(pattern):
             regex = re.compile(pattern)
             filenames = [f for f in filter(regex.search, os.listdir(munin_folder)) if fnmatch.fnmatch(f, '*.png')]
         return json.dumps(filenames)
-
-
-@auth.required()
-def get_user_images():
-    """ Returns user-selected graph names from database. """
-    session = auth.lookup(request.headers.get('lgui-Authorization', None))
-    user = session['user']
-    return json.dumps(get_images_by_user(user.username))
-
-def create_db_string(str, image_list):
-    """ Adds image_list to str as semicolon separated list of images """
-    for file in image_list:
-        if str == '':
-            # write first item
-            str = file + ';'
-        else:
-            str = str + ';' + file
-    return str

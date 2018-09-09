@@ -10,6 +10,7 @@ from liberouterapi import auth
 
 from .patterns import *
 from .images import *
+from .db import *
 import json
 
 from flask import send_from_directory, request
@@ -22,7 +23,10 @@ def load_image(filename):
 @auth.required()
 def load_filenames(pattern_title):
     """ Load image names based on pattern title """
-    return names_from_patterns(pattern_from_name(pattern_title))
+    if pattern_title == 'default':
+        return get_user_images()
+    else:
+        return names_from_patterns(pattern_from_name(pattern_title))
 
 @auth.required()
 def load_filenames_with_interval(pattern_title):
@@ -30,3 +34,23 @@ def load_filenames_with_interval(pattern_title):
     data = request.json
     intervals = data['intervals']
     return names_from_patterns(add_interval_filter(intervals, pattern_from_name(pattern_title)))
+
+@auth.required()
+def get_user_images():
+    """ Returns user-selected graph names from database. """
+    session = auth.lookup(request.headers.get('lgui-Authorization', None))
+    user = session['user']
+    return json.dumps(get_images_by_user(user.username))
+
+@auth.required()
+def add_user_images():
+    session = auth.lookup(request.headers.get('lgui-Authorization', None))
+    user = session['user']
+    data = request.json
+    print('Data are here')
+    print(data)
+    images = data['images']
+    print('Got some images')
+    print(images)
+    add_image_to_db(user.username, images)
+    return json.dumps([])
