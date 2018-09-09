@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {HttpParams} from "@angular/common/http";
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -31,6 +32,10 @@ export class MonitorService {
     return this.http.get<string[]>('/monitor/filenames/' + category).pipe(
       catchError(this.handleError('getGraphs', []))
     );
+  }
+
+  getGraphsWithIntervals(category: string, intervals: string[]): Observable<string[]> {
+    return this.http.post<string[]>('/monitor/filenames-filter/' + category, {'intervals': intervals})
   }
 
 

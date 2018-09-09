@@ -11,17 +11,17 @@
     <!-- Toolbar -->
     <div class="row">
       <div class="col-sm-12">
-        <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
+            <p *ngIf="active !== 'Dashboard'">{{activePattern.title}} pattern: {{activePattern.pattern}}</p>
+            <label for="interval-select">Set interval</label>
+            <select (change)="setDisplayInterval()" [(ngModel)]="displayInterval" title="interval" id="interval-select">
+              <option [value]="'day'">Day</option>
+              <option [value]="'week'">Week</option>
+              <option [value]="'month'">Month</option>
+              <option [value]="'year'">Year</option>
+              <option [value]="'all'" *ngIf="active !== 'Dashboard'">All</option>
+            </select>
       </div>
-      <div class="col-sm-12">
-        <select (change)="setDisplayInterval()" title="interval">
-          <option [value]="'day'">Day</option>
-          <option [value]="'week'">Week</option>
-          <option [value]="'month'">Month</option>
-          <option [value]="'year'">Year</option>
-          <option [value]="'all'" *ngIf="active !== 'Dashboard'">All</option>
-        </select>
-      </div>
+
     </div>
 
     <!-- Add graph form-->
@@ -42,6 +42,24 @@
             </select>
             <p *ngIf="localLinks.length == 0 && localLinksLoaded">No graphs in selected category.</p>
             <p *ngIf="!localLinksLoaded">Loading..</p>
+            <div class="row">
+              <div class="col-sm-12 col-md-3">
+                <label for="checkDay">Day</label>
+                <input type="checkbox" [(ngModel)]="checkDay" id="checkDay">
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <label for="checkWeek">Week</label>
+                <input type="checkbox" [(ngModel)]="checkWeek" id="checkWeek">
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <label for="checkMonth">Month</label>
+                <input type="checkbox" [(ngModel)]="checkMonth" id="checkMonth">
+              </div>
+              <div class="col-sm-12 col-md-3">
+                <label for="checkYear">Year</label>
+                <input type="checkbox" [(ngModel)]="checkYear" id="checkYear">
+              </div>
+            </div>
           </div>
         </div>
       </div>

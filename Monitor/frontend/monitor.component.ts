@@ -24,6 +24,12 @@ export class MonitorComponent implements OnInit {
   loadMoreStep: number = 6; // How many graphs should load when "Load more" button is pressed
   localLinks: string[] = [];
   localLinksLoaded: boolean = true;
+  displayInterval: string = 'all'; // Value of interval dropdown
+  // Checkboxes
+  checkDay: boolean;
+  checkWeek: boolean;
+  checkMonth: boolean;
+  checkYear: boolean;
   constructor(
     private monitorService: MonitorService,
     private imageService: ImageService
@@ -52,6 +58,11 @@ export class MonitorComponent implements OnInit {
   /** Returns list of image links to use in getImageFromService function. */
   getGraphLinks(category): void {
     this.monitorService.getGraphs(category)
+      .subscribe(links => this.graphLinks = links, err => console.error(err), () => this.loadImages(0));
+  }
+
+  getFilteredGraphLinks(category: string, intervals: string[]): void {
+    this.monitorService.getGraphsWithIntervals(category, intervals)
       .subscribe(links => this.graphLinks = links, err => console.error(err), () => this.loadImages(0));
   }
 
@@ -130,6 +141,7 @@ export class MonitorComponent implements OnInit {
     // Pattern is not valid, load dashboard
     this.active = 'Dashboard';
     this.activePattern = null;
+    this.displayInterval = 'all';
     this.getGraphLinks('default');
 
   }
@@ -142,7 +154,23 @@ export class MonitorComponent implements OnInit {
   }
   /** Change interval of selected graphs (on dashboard) or on all graphs (outside of dashboard) */
   setDisplayInterval(): void {
-    console.log('Interval changed');
+    // Filter all loaded graphs
+    if (this.active !== 'Dashboard') {
+      console.log(this.displayInterval);
+      this.graphLinks = [];
+      this.imagesToShow = [];
+      if (this.displayInterval == 'all') {
+        this.getGraphLinks(this.active);
+      }
+      else {
+        this.getFilteredGraphLinks(this.active, [this.displayInterval]);
+      }
+
+    }
+    // Update user's database values, change only selected graphs
+    else {
+      // TODO
+    }
   }
 
 }
