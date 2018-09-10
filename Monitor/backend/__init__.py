@@ -40,3 +40,7 @@ module_bp.add_url_rule('/user', view_func = get_user_images, methods = ['GET'])
 # Adds graph name to user's database entry. Graph is autmatically added to user sending this request.
 # Graph list should be in request body.
 module_bp.add_url_rule('/add-graph', view_func = add_user_images, methods = ['POST'])
+
+# Remove graph name from user's database entry. Graph is autmatically removed from user sending this request.
+# Graph list should be in request body.
+module_bp.add_url_rule('/remove-graph', view_func = remove_user_image, methods = ['POST'])

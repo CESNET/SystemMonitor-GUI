@@ -25,12 +25,8 @@ def get_images_by_user(user):
     if res == None:
         return json.dumps([])
     images = res['images']
-    print('Got result from get_images_by_user')
-    # Remove empty values
-    result = [x for x in filter(None, images.split(';'))]
-    print(result)
-    print(type(result))
-    return result
+    # result = decompile_db_strng(images)
+    return images
 
 @auth.required()
 def add_image_to_db(user, filenames):
@@ -40,9 +36,6 @@ def add_image_to_db(user, filenames):
          user -- username of logged-in user
          filenames -- list of names to add. If you want to add one image, use list with one item.
     """
-    print('Got user ' + user)
-    print('Adding filenams')
-    print(filenames)
     # Add semicolon and filename to db string by user.
     # If user was not in DB, create row for him and add filename without semicolon
     # filenames is an array, to add one graph input array with one item
@@ -51,33 +44,28 @@ def add_image_to_db(user, filenames):
     # IDEA: If that is the case, some flag should indicate, that graphs changed.
 
     res = user_graphs.find_one({'user': user})
-    '''if res == None:
-        # User was not found, add him
-        print('User ' + user + ' was not in monitor database yet, adding him now.')
-        result = create_db_string('', filenames)
-        user_graphs.insert_one({'user': user, "images": result})
-    else:'''
     if res == None:
-        images = ''
+        images = []
     else:
         images = res['images']
-    result = create_db_string(images, filenames)
-    user_graphs.update_one({"user": user }, {'$set': {"images": result}}, True)
+    #result = create_db_string(images, filenames)
+    images = images + filenames
+    user_graphs.update_one({"user": user }, {'$set': {"images": images}}, True)
 
 
 
 @auth.required()
 def reorder_graphs(user, new_order):
-    # This function will simply replace old string with new string.
-    # This can be useful in GUI, where user should be able to reorder his graphs
-    # IDEA: Frontend would change array imagesToShow[] and send it to backend.
-    # IDEA: There should be a boolean indicating change, changes should be sent when unloading page.
-    pass
+    user_graphs.update_one({"user": user }, {'$set': {"images": new_order}}, True)
+
+@auth.required()
+def remove_graph(user, graph_name):
+    old_graphs = get_images_by_user(user)
+    graphs = [x for x in old_graphs if x != graph_name]
+    reorder_graphs(user, graphs)
 
 def create_db_string(str, image_list):
     """ Adds image_list to str as semicolon separated list of images """
-    print('Creating DB string from str ' + str + ' and list')
-    print(image_list)
     for file in image_list:
         if str == '':
             # write first item
@@ -86,3 +74,7 @@ def create_db_string(str, image_list):
             str = str + ';' + file
     print('DB string is done, here it is: ' + str)
     return str
+
+def decompile_db_strng(db_string):
+    """ Returns array made from string from DB """
+    return [x for x in filter(None, db_string.split(';'))]

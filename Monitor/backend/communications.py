@@ -47,10 +47,15 @@ def add_user_images():
     session = auth.lookup(request.headers.get('lgui-Authorization', None))
     user = session['user']
     data = request.json
-    print('Data are here')
-    print(data)
     images = data['images']
-    print('Got some images')
-    print(images)
     add_image_to_db(user.username, images)
+    return json.dumps([])
+
+@auth.required()
+def remove_user_image():
+    session = auth.lookup(request.headers.get('lgui-Authorization', None))
+    user = session['user']
+    data = request.json
+    graph = data['graph']
+    remove_graph(user.username, graph)
     return json.dumps([])
