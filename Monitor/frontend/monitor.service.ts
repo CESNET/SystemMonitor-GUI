@@ -49,8 +49,14 @@ export class MonitorService {
   }
 
   addUserGraph(graphLinks: string[]): Observable<object> {
-    return this.http.post<object>('/monitor/add-graph/', {'images': graphLinks}).pipe(
+    return this.http.post<object>('/monitor/add-graph', {'images': graphLinks}).pipe(
       catchError(this.handleError('addUserGraph', []))
+    );
+  }
+
+  removeGraph(graphName: string): Observable<object> {
+    return this.http.post<object>('/monitor/remove-graph', {'graph': graphName}).pipe(
+      catchError(this.handleError('removeGraph', []))
     );
   }
 

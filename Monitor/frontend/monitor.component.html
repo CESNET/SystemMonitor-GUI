@@ -83,13 +83,20 @@
     <!-- Graphs -->
     <div class="row">
       <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let image of imagesToShow | slice:start:start+max">
-        <img [src]="image"
-             alt="Loading..."
-             class="img-responsive"
-             *ngIf="!isImageLoading; else noImageFound">
-        <ng-template #noImageFound>
-          <p class="lrg-form-error">Graph failed to load</p>
-        </ng-template>
+          <img [src]="image.image"
+               alt="Loading..."
+               class="img-responsive"
+               *ngIf="!isImageLoading; else noImageFound">
+          <ng-template #noImageFound>
+            <p class="lrg-form-error">Graph failed to load</p>
+          </ng-template>
+        <div class="overlay">
+          <i *ngIf="active == 'Dashboard'"
+             class="fa fa-times delete-icon"
+             aria-hidden="true"
+             (click)="removeGraph(image.filename)"></i>
+        </div>
+
       </div>
     </div>
 
