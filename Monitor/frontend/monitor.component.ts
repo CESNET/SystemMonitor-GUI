@@ -194,7 +194,11 @@ export class MonitorComponent implements OnInit {
     }
     // Update user's database values, change only selected graphs
     else {
-      // TODO
+      if(this.displayInterval !== 'all' && this.displayInterval !== 'default') {
+        this.changeIntervalOnSelected(this.displayInterval);
+        this.displayInterval = 'default';
+      }
+
     }
 
   }
@@ -262,4 +266,21 @@ export class MonitorComponent implements OnInit {
     this.getGraphLinks('default');
   }
 
+  changeIntervalOnSelected(newInterval: string): void {
+    for (let img of this.imagesToShow) {
+      if(img.selected) {
+        this.changeInterval(img, newInterval);
+      }
+    }
+  }
+
+  changeInterval(image: Image, newInterval: string): void {
+    let newName = image.filename.replace(/(day|week|month|year)/gi, newInterval);
+    this.addGraph(newName);
+    let index = this.imagesToShow.indexOf(image);
+    if (index !== -1) {
+      // this.imagesToShow[index] = this.imagesToShow[this.imagesToShow.length - 1];
+      this.removeGraph(image.filename);
+    }
+  }
 }
