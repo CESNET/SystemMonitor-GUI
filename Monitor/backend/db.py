@@ -12,6 +12,7 @@ from liberouterapi.dbConnector import dbConnector
 from .images import *
 
 import json
+from flask import jsonify
 
 monitor = dbConnector('monitor')
 db = monitor.db[config['monitor']['collection']]
@@ -25,11 +26,12 @@ def get_images_by_user(user):
         return json.dumps([])
     images = res['images']
     print('Got result from get_images_by_user')
-    result = images.split(';')
+    # Remove empty values
+    result = [x for x in filter(None, images.split(';'))]
     print(result)
-    return json.dumps(result)
+    print(type(result))
+    return result
 
-# FIXME
 @auth.required()
 def add_image_to_db(user, filenames):
     """ Adds an image to user's list of graphs
@@ -48,16 +50,19 @@ def add_image_to_db(user, filenames):
     # IDEA: If this is too slow, frontend could add new graphs to some buffer and send them to db when page is unloading.
     # IDEA: If that is the case, some flag should indicate, that graphs changed.
 
-    res = db.find_one({'user': user}) # FIXME: This does not work for some reason. Always returs none
-    if res == None:
+    res = user_graphs.find_one({'user': user})
+    '''if res == None:
         # User was not found, add him
         print('User ' + user + ' was not in monitor database yet, adding him now.')
         result = create_db_string('', filenames)
         user_graphs.insert_one({'user': user, "images": result})
+    else:'''
+    if res == None:
+        images = ''
     else:
         images = res['images']
-        result = create_db_string(images, filenames)
-        user_graphs.update_one({"user": user }, {"images": result})
+    result = create_db_string(images, filenames)
+    user_graphs.update_one({"user": user }, {'$set': {"images": result}}, True)
 
 
 
@@ -76,7 +81,7 @@ def create_db_string(str, image_list):
     for file in image_list:
         if str == '':
             # write first item
-            str = file + ';'
+            str = file
         else:
             str = str + ';' + file
     print('DB string is done, here it is: ' + str)
