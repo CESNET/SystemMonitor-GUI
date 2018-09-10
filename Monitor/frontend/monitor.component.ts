@@ -116,7 +116,7 @@ export class MonitorComponent implements OnInit {
   createImageFromBlob(image: Blob, filename: string) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
-      this.imagesToShow.push({filename: filename, image: reader.result});
+      this.imagesToShow.push({filename: filename, image: reader.result, selected: false});
     }, false);
 
     if (image) {
@@ -204,7 +204,7 @@ export class MonitorComponent implements OnInit {
     this.graphBuffer.push(graphName);
   }
 
-  removeGraph(graphName: string) {
+  removeGraph(graphName: string, noReload: boolean = false) {
     // Remove from buffer
     for (let graph of this.graphBuffer) {
       if (graph == graphName) {
@@ -213,8 +213,6 @@ export class MonitorComponent implements OnInit {
         if (index > -1) {
           this.graphBuffer.splice(index, 1);
           // Removed graph from buffer, save buffer and reload images
-          console.log('Graph buffer after removal');
-          console.log(this.graphBuffer);
           this.saveGraphs();
           let i = 0;
           for (let image of this.imagesToShow) {
@@ -235,8 +233,11 @@ export class MonitorComponent implements OnInit {
 
     // Reload images
     this.saveGraphs();
-    this.imagesToShow = [];
-    this.getGraphLinks('default');
+    if (!noReload) {
+      this.imagesToShow = [];
+      this.getGraphLinks('default');
+    }
+
   }
 
   /** Add graph to users list of graphs */
@@ -248,6 +249,17 @@ export class MonitorComponent implements OnInit {
             () => this.graphBuffer = []);
     }
 
+  }
+
+  removeSelected(): void {
+    for (let img of this.imagesToShow) {
+      if(img.selected) {
+        this.removeGraph(img.filename, true);
+        console.log("Removing graph " + img.filename);
+      }
+    }
+    this.imagesToShow = [];
+    this.getGraphLinks('default');
   }
 
 }

@@ -4,4 +4,5 @@
 export class Image {
   filename: string;
   image: any;
+  selected?: boolean;
 }

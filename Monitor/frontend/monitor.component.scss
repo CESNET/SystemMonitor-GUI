@@ -23,6 +23,10 @@
 .img-responsive {
   max-width: 100%;
 }
+.graph {
+  border: 3px solid transparent;
+  transition: all 100ms ease-in-out;
+}
 .center-text {
   text-align: center;
 }
@@ -58,4 +62,8 @@
   left: 0;
   height: 100%;
   width: calc(100% - 20px);
+}
+.selected {
+  border: 3px solid $colorSelected2;
+  border-radius: 5px;
 }
