@@ -246,9 +246,9 @@ export class MonitorComponent implements OnInit {
 
   /** Add graph to users list of graphs */
   saveGraphs(): void {
-    if( this.graphBuffer != []) {
+    if (this.graphBuffer.length !== 0) {
       this.monitorService.addUserGraph(this.graphBuffer)
-        .subscribe(res => console.log(res),
+        .subscribe(() => this.graphBuffer = [],
             err => console.error(err),
             () => this.graphBuffer = []);
     }
@@ -259,7 +259,6 @@ export class MonitorComponent implements OnInit {
     for (let img of this.imagesToShow) {
       if(img.selected) {
         this.removeGraph(img.filename, true);
-        console.log("Removing graph " + img.filename);
       }
     }
     this.imagesToShow = [];
@@ -272,15 +271,23 @@ export class MonitorComponent implements OnInit {
         this.changeInterval(img, newInterval);
       }
     }
+    this.imagesToShow = [];
+    this.monitorService.reorderGraphs(this.graphLinks.concat(this.graphBuffer)).subscribe(
+      (res) => this.graphBuffer = [],
+      (err) => console.error(err),
+      () => this.getGraphLinks('default'));
   }
 
   changeInterval(image: Image, newInterval: string): void {
     let newName = image.filename.replace(/(day|week|month|year)/gi, newInterval);
-    this.addGraph(newName);
-    let index = this.imagesToShow.indexOf(image);
+    // this.addGraph(newName);
+    let index = this.graphLinks.indexOf(image.filename);
     if (index !== -1) {
-      // this.imagesToShow[index] = this.imagesToShow[this.imagesToShow.length - 1];
-      this.removeGraph(image.filename);
+      this.graphLinks[index] = newName;
+    }
+    index = this.graphBuffer.indexOf(image.filename);
+    if (index !== -1) {
+      this.graphBuffer[index] = newName;
     }
   }
 }

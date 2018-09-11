@@ -47,16 +47,38 @@ export class MonitorService {
       catchError(this.handleError('getGraphsWithIntervals', []))
     );
   }
-
+  /**
+   * POST operation.
+   * Adds graphs to database. User's username is determined from request auth headers.
+   *
+   * @param graphLinks - list of graph names to add
+   */
   addUserGraph(graphLinks: string[]): Observable<object> {
     return this.http.post<object>('/monitor/add-graph', {'images': graphLinks}).pipe(
       catchError(this.handleError('addUserGraph', []))
     );
   }
-
+  /**
+   * POST operation.
+   * Remove graph from database. User's username is determined from request auth headers.
+   *
+   * @param graphName - name of graph to remove
+   */
   removeGraph(graphName: string): Observable<object> {
     return this.http.post<object>('/monitor/remove-graph', {'graph': graphName}).pipe(
       catchError(this.handleError('removeGraph', []))
+    );
+  }
+  /**
+   * POST operation.
+   * Replace users database entry with new list of graphs.
+   * User's username is determined from request auth headers.
+   *
+   * @param graphList - New list of graphs
+   */
+  reorderGraphs(graphList: string[]): Observable<object> {
+    return this.http.post<object>('/monitor/reorder', {'graphs': graphList}).pipe(
+      catchError(this.handleError('reorderGraphs', []))
     );
   }
 
