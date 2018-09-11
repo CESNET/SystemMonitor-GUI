@@ -63,18 +63,3 @@ def remove_graph(user, graph_name):
     old_graphs = get_images_by_user(user)
     graphs = [x for x in old_graphs if x != graph_name]
     reorder_graphs(user, graphs)
-
-def create_db_string(str, image_list):
-    """ Adds image_list to str as semicolon separated list of images """
-    for file in image_list:
-        if str == '':
-            # write first item
-            str = file
-        else:
-            str = str + ';' + file
-    print('DB string is done, here it is: ' + str)
-    return str
-
-def decompile_db_strng(db_string):
-    """ Returns array made from string from DB """
-    return [x for x in filter(None, db_string.split(';'))]

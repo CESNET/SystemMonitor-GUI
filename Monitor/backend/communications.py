@@ -59,3 +59,12 @@ def remove_user_image():
     graph = data['graph']
     remove_graph(user.username, graph)
     return json.dumps([])
+
+@auth.required()
+def reorder():
+    session = auth.lookup(request.headers.get('lgui-Authorization', None))
+    user = session['user']
+    data = request.json
+    graphs = data['graphs']
+    reorder_graphs(user.username, graphs)
+    return json.dumps([])
