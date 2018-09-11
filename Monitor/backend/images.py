@@ -15,6 +15,8 @@ import json
 import fnmatch
 import re
 
+# fnmatch pattern for filtering file formats. Default '*.png'
+extension_filter = '*.png'
 
 def get_munin_folder():
     """ Load munin installation location from config """
@@ -61,9 +63,9 @@ def names_from_patterns(pattern):
                 if re.match('.*[/]?' + pathpattern, path) is not None:
                     regex = re.compile(filepattern)
                     localpath = path.replace(munin_folder, "")
-                    filenames = filenames + [localpath + '/' + f for f in filter(regex.search, files) if fnmatch.fnmatch(f, '*.png')]
+                    filenames = filenames + [localpath + '/' + f for f in filter(regex.search, files) if fnmatch.fnmatch(f, extension_filter)]
         else:
             # pattern is not for subdirectory, listdir is enough
             regex = re.compile(pattern)
-            filenames = [f for f in filter(regex.search, os.listdir(munin_folder)) if fnmatch.fnmatch(f, '*.png')]
+            filenames = [f for f in filter(regex.search, os.listdir(munin_folder)) if fnmatch.fnmatch(f, extension_filter)]
         return json.dumps(filenames)
