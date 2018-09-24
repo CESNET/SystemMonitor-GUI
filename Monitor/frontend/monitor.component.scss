@@ -21,7 +21,8 @@
   color: $colorTextInverse;
 }
 .img-responsive {
-  max-width: 100%;
+  width: 100%;
+  height: auto;
 }
 .graph {
   border: 3px solid transparent;
@@ -66,4 +67,9 @@
 .selected {
   border: 3px solid $colorSelected2;
   border-radius: 5px;
+}
+.select-image {
+  position: absolute;
+  top: 0;
+  left: 20px;
 }

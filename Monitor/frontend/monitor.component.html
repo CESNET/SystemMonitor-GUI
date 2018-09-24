@@ -95,10 +95,11 @@
           <ng-template #noImageFound>
             <p class="lrg-form-error">Graph failed to load</p>
           </ng-template>
-        <div class="overlay" *ngIf="active == 'Dashboard'" (click)="image.selected = !image.selected">
+        <div class="overlay">
           <i class="fa fa-times delete-icon"
              aria-hidden="true"
              (click)="removeGraph(image.filename)"></i>
+          <input class="select-image" type="checkbox" [(ngModel)]="image.selected" *ngIf="active == 'Dashboard'">
         </div>
 
       </div>
