@@ -31,6 +31,7 @@ export class MonitorComponent implements OnInit {
   localLinksLoaded: boolean = true;
   displayInterval: string = 'default'; // Value of interval dropdown
   searchInterval: string = 'all';
+  zoomImage: any = null;
 
   graphToAdd: string;
 

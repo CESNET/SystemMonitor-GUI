@@ -91,15 +91,19 @@
                alt="Loading..."
                class="img-responsive graph"
                [ngClass]="{selected: image.selected}"
-               *ngIf="!isImageLoading; else noImageFound">
+               *ngIf="!isImageLoading; else noImageFound"
+              >
           <ng-template #noImageFound>
             <p class="lrg-form-error">Graph failed to load</p>
           </ng-template>
-        <div class="overlay">
+        <div class="overlay" (click)="zoomImage = image.image">
           <i class="fa fa-times delete-icon"
              aria-hidden="true"
-             (click)="removeGraph(image.filename)"></i>
-          <input class="select-image" type="checkbox" [(ngModel)]="image.selected" *ngIf="active == 'Dashboard'">
+             (click)="removeGraph(image.filename)" *ngIf="active == 'Dashboard'"></i>
+          <input class="select-image" type="checkbox"
+                 [(ngModel)]="image.selected"
+                 *ngIf="active == 'Dashboard'"
+                 (click)="$event.stopPropagation()">
         </div>
 
       </div>
@@ -116,3 +120,7 @@
 
   </div> <!-- .box -->
 </div> <!-- .container-fluid -->
+<div class="fullscreen" *ngIf="zoomImage != null">
+    <img [src]="zoomImage" (click)="zoomImage = null" class="img-responsive">
+</div>
+
