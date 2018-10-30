@@ -48,8 +48,8 @@ def add_interval_filter(intervals, pattern):
 @auth.required()
 def names_from_patterns(pattern):
     """ Returns array of file names based on pattern. """
-    # We are loading dashboard images, skip rest of this function
     if pattern == None:
+        # We are loading dashboard images, skip rest of this function
         return get_user_images()
     else:
         munin_folder = get_munin_folder()

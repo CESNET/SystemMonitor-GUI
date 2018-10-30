@@ -3,7 +3,8 @@ Monitor backend
 File: db.py
 Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
 
-Database connections
+Database connections.
+This file is only used, if storage method in config is set to "mongodb"
 """
 
 from liberouterapi import db, auth, config
@@ -36,12 +37,9 @@ def add_image_to_db(user, filenames):
          user -- username of logged-in user
          filenames -- list of names to add. If you want to add one image, use list with one item.
     """
-    # Add semicolon and filename to db string by user.
-    # If user was not in DB, create row for him and add filename without semicolon
+    # If user was not in DB, create row for him and add filename
     # filenames is an array, to add one graph input array with one item
     # this simplifies adding multiple graphs (multiple intervals at once)
-    # IDEA: If this is too slow, frontend could add new graphs to some buffer and send them to db when page is unloading.
-    # IDEA: If that is the case, some flag should indicate, that graphs changed.
 
     res = user_graphs.find_one({'user': user})
     if res == None:
