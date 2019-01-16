@@ -16,13 +16,20 @@ import os
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 @auth.required()
-def get_image_by_user(user):
+def get_images_by_user(user):
     user_file = os.path.join(SITE_ROOT, user + '.json')
-    data = {}
-    with open(user_file) as f:
-        data = json.load(f)
+    data = {"images": []}
+    with open(user_file, 'a+') as f:
+        try:
+            f.seek(0)
+            data = json.load(f)
+        except Exception as e: # File did not exist or was empty.
+            f.seek(0)
+            json.dump({"images": []}, f)
+            data = {"images": []}
+            f.truncate()
     # If something happened, file will be closed and empty json will be returned.
-    return json.dumps(data)
+    return json.dumps(data["images"])
 
 
 
@@ -31,13 +38,17 @@ def add_image_to_db(user, filenames):
     user_file = os.path.join(SITE_ROOT, user + '.json')
     with open(user_file, 'r+') as f:
         data = json.load(f)
-        data[0] = data[0] + filenames
+        if data == None: # File did not exist or was empty.
+            data = {"images": []}
+        data["images"] = data["images"] + filenames
+        f.seek(0)
         json.dump(data, f)
+        f.truncate()
 
 @auth.required()
 def reorder_graphs(user, new_order):
     user_file = os.path.join(SITE_ROOT, user + '.json')
-    with open(user_file, 'w') as f:
+    with open(user_file, 'w+') as f:
         json.dump({new_order}, f) #TODO: Check data format
 
 @auth.required()
@@ -45,6 +56,5 @@ def remove_graph(user, graph_name):
     user_file = os.path.join(SITE_ROOT, user + '.json')
     with open(user_file) as f:
         data = json.load(f)
-        data = {[d for d in data[0] if d != graph_name]} #TODO: Check if this works
+        data["images"] = {[d for d in data["images"] if d != graph_name]}
         json.dump(data, f)
-    

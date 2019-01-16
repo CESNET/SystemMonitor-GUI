@@ -6,7 +6,7 @@ Author: Jakub Man <xmanja00@stud.fit.vutbr.cz>
 Generation of image names from patterns and filtering them.
 """
 from .patterns import *
-from .db import *
+from .userfile import *
 from liberouterapi import auth
 from flask import request
 
@@ -39,7 +39,7 @@ def add_interval_filter(intervals, pattern):
     """
     if intervals != []:
         pattern = pattern + "-(" + intervals[0]
-        for i in range(1, len(intervals)):
+        for i in range(1, len(intervals) - 1):
             pattern = pattern + '|' + intervals[i]
         pattern = pattern + ')'
     return pattern

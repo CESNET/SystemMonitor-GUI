@@ -9,6 +9,8 @@ Backend initialization using liberouter GUI.
 from liberouterapi import config, modules
 from liberouterapi.dbConnector import dbConnector
 
+
+"""
 # Get Netopeer backend config
 config.load(path = __path__[0] + '/config.ini')
 
@@ -17,7 +19,7 @@ db_conn = dbConnector("monitor",
         config = {
             'database' : config['monitor']['database']
             })
-
+"""
 
 # Register a blueprint
 module_bp = modules.module.Module('monitor', __name__, url_prefix = '/monitor', no_version = True)
@@ -25,7 +27,7 @@ module_bp = modules.module.Module('monitor', __name__, url_prefix = '/monitor', 
 
 from .patterns import *
 from .communications import *
-from .db import *
+from .userfile import *
 
 # Returns patterns and their names from config
 module_bp.add_url_rule('/patterns', view_func = get_patterns, methods = ['GET'])
