@@ -49,12 +49,14 @@ def add_image_to_db(user, filenames):
 def reorder_graphs(user, new_order):
     user_file = os.path.join(SITE_ROOT, user + '.json')
     with open(user_file, 'w+') as f:
-        json.dump({new_order}, f) #TODO: Check data format
+        json.dump({"images": new_order}, f) #TODO: Check data format
 
 @auth.required()
 def remove_graph(user, graph_name):
     user_file = os.path.join(SITE_ROOT, user + '.json')
-    with open(user_file) as f:
+    with open(user_file, 'r+') as f:
         data = json.load(f)
-        data["images"] = {[d for d in data["images"] if d != graph_name]}
+        data["images"] = [d for d in data["images"] if d != graph_name]
+        f.seek(0)
         json.dump(data, f)
+        f.truncate()

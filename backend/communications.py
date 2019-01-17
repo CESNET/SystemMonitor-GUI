@@ -40,7 +40,7 @@ def get_user_images():
     """ Returns user-selected graph names from database. """
     session = auth.lookup(request.headers.get('lgui-Authorization', None))
     user = session['user']
-    return json.dumps(get_images_by_user(user.username))
+    return get_images_by_user(user.username)
 
 @auth.required()
 def add_user_images():
