@@ -5,7 +5,6 @@
         "file" : "monitor.module.ts",
         "class" : "MonitorModule",
         "frontend" : "frontend",
-        "backend" : "backend",
-        "assets" : "assets"
+        "backend" : "backend"
     }
 }
